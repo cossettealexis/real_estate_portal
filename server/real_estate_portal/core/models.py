@@ -2,6 +2,7 @@ from django.db import models
 from core.utils import upload_to
 from django.conf import settings
 from django.db.models.signals import post_save
+from django_countries.fields import CountryField
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
@@ -30,28 +31,23 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractUser):
     email = models.EmailField(unique=True, blank=False, null=False)
-    country_code = models.CharField(max_length=5)
-    phone_number = models.CharField(max_length=15)
+    username = models.CharField(max_length=150, unique=True, blank=True, null=True)
+    country = country = CountryField(blank=True, null=True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True, help_text="Include the international country code, e.g., +1 for USA, +44 for UK, +81 for Japan, etc.")
     profile_picture = models.ImageField(upload_to=upload_to, blank=True, null=True)
+
+    objects = CustomUserManager()
 
     class Meta(AbstractUser.Meta):
         swappable = "AUTH_USER_MODEL"
         db_table = "auth_user"
 
     def __str__(self):
-        return self.get_full_name()
+        return self.get_full_name() or self.email
     
     def save(self, *args, **kwargs):
-        if self.user.first_name and self.user.last_name:
-            self.user.first_name = self.user.first_name.title()
-            self.user.last_name = self.user.last_name.title()
-            self.user.save()
+        if self.first_name and self.last_name:
+            self.first_name = self.first_name.title()
+            self.last_name = self.last_name.title()
 
         super().save(*args, **kwargs)
-
-# def userprofile_receiver(sender, instance, created, *args, **kwargs):
-#     if created:
-#         UserProfile.objects.create(user=instance)
-
-
-# post_save.connect(userprofile_receiver, sender=User)
