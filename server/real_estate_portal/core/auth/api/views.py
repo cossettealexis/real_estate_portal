@@ -7,6 +7,7 @@ from rest_framework.exceptions import ValidationError
 from core.models import User
 from core.utils import create_token_and_login
 from core.auth.api.serializers import UserSerializer
+from core.permissions import IsOwnerOrAdminOrReadOnly
 
 
 @api_view(['POST'])
@@ -62,3 +63,23 @@ def user_logout(request):
             return Response({'message': 'Successfully logged out.'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated, IsOwnerOrAdminOrReadOnly])
+def delete_user(request):
+    try:
+        user = User.objects.get(id=request.user.pk)
+    except User.DoesNotExist:
+        return Response({'error': 'User does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    
+    if not request.user.is_staff and user != request.user:
+        return Response({'error': 'Permission denied.'}, status=status.HTTP_403_FORBIDDEN)
+    
+    try:
+        user.delete()
+        return Response({'message': 'User deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
