@@ -1,4 +1,4 @@
-from rest_framework import status, permissions
+from rest_framework import status, permissions, viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
@@ -8,6 +8,15 @@ from core.models import User
 from core.utils import create_token_and_login
 from core.auth.api.serializers import UserSerializer
 from core.permissions import IsOwnerOrAdminOrReadOnly
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    http_method_names = [
+        'get',
+    ]
+    serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticated, IsOwnerOrAdminOrReadOnly,)
 
 
 @api_view(['POST'])
@@ -83,3 +92,22 @@ def delete_user(request):
         return Response({'message': 'User deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_user_profile(request, user_id):
+    try:
+        user_profile = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return Response({'error': 'User profile not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+    if user_profile != request.user:
+        return Response({'error': 'Permission denied.'}, status=status.HTTP_403_FORBIDDEN)
+    
+    serializer = UserSerializer(user_profile, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

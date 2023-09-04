@@ -4,3 +4,4 @@ django-environ==0.11.1
 Pillow==10.0.0
 psycopg2_binary==2.9.6
 django-countries==7.5.1
+django-filter==23.2

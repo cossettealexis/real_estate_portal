@@ -18,6 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
             )
 
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    country = serializers.CharField(source='country.name', required=False, allow_blank=True, allow_null=True,)
 
     class Meta(object):
         model = User
@@ -42,7 +43,7 @@ class UserSerializer(serializers.ModelSerializer):
             password=validated_data.get('password'),
         )
 
-        
+        user.country = validated_data.get('country')
         user.set_password(validated_data['password'])
         user.save()
 
