@@ -1,12 +1,13 @@
-from core.models import User
+from core.models import User, Country
 
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
+from django_countries.serializers import CountryFieldMixin
 from django.contrib.auth.password_validation import validate_password
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(CountryFieldMixin, serializers.ModelSerializer):
     """
     Serializer for User model.
     """
@@ -18,7 +19,8 @@ class UserSerializer(serializers.ModelSerializer):
             )
 
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    country = serializers.CharField(source='country.name', required=False, allow_blank=True, allow_null=True,)
+    country = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+    phone_number = serializers.CharField(required=False, allow_null=True, allow_blank=True)
 
     class Meta(object):
         model = User
@@ -41,10 +43,19 @@ class UserSerializer(serializers.ModelSerializer):
             first_name=validated_data.get('first_name'),
             last_name=validated_data.get('last_name'),
             password=validated_data.get('password'),
+            country=validated_data.get('country'),
+            phone_number=validated_data.get('phone_number'),
         )
 
-        user.country = validated_data.get('country')
         user.set_password(validated_data['password'])
         user.save()
 
         return user
+    
+
+class CountrySerializer(serializers.ModelSerializer):
+    phone_number_code = serializers.CharField(source='name')
+
+    class Meta:
+        model = Country
+        fields = ('name', 'phone_number_code')

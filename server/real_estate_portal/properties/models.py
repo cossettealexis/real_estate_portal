@@ -173,7 +173,7 @@ class Amenity(models.Model):
     amenity = models.TextField(
         verbose_name="Amenity", blank=True, null=True, db_column="amenity"
     )
-    propertyId = models.ForeignKey(
+    property = models.ForeignKey(
         Properties,
         verbose_name="Property",
         blank=True,
@@ -186,6 +186,10 @@ class Amenity(models.Model):
         verbose_name = "Amenity"
         verbose_name_plural = "Amenities"
         db_table = "amenity"
+
+
+    def __str__(self):
+        return self.property.name + " - " + self.amenity
 
 
 class ProjectedRentalExpense(models.Model):

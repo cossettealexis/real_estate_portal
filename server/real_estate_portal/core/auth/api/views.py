@@ -3,11 +3,14 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
+from rest_framework.generics import ListAPIView
 
-from core.models import User
-from core.utils import create_token_and_login
-from core.auth.api.serializers import UserSerializer
+from core.models import User, Country
+from core.utils import create_token_and_login, is_valid_phone_number_format
+from core.auth.api.serializers import UserSerializer, CountrySerializer
 from core.permissions import IsOwnerOrAdminOrReadOnly
+
+import phonenumbers
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -26,6 +29,11 @@ def register_user(request):
     """
     if request.method == 'POST':
         serializer = UserSerializer(data=request.data)
+        country_code = request.data.get('country')
+        phone_number = request.data.get('phone_number')
+
+        if not is_valid_phone_number_format(country_code, phone_number):
+            return Response({'error': 'Invalid phone number format for the selected country code.'}, status=status.HTTP_400_BAD_REQUEST)
         if serializer.is_valid():
             user = serializer.save()
 
@@ -111,3 +119,17 @@ def update_user_profile(request, user_id):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CountryViewSet(ListAPIView):
+    queryset = Country.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        countries = self.queryset.all()
+
+        for country in countries:
+            country.phone_number_code = phonenumbers.country_code(country.name)
+
+        serializer = CountrySerializer(countries, many=True)
+
+        return Response(serializer.data)
