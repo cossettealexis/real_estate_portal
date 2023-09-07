@@ -66,6 +66,7 @@ class Properties(models.Model):
     country = models.CharField(
         max_length=100, blank=False, null=False, db_column="country"
     )
+    
     type = models.ForeignKey(
         Category, blank=False, null=False, db_column="type", on_delete=models.CASCADE
     )

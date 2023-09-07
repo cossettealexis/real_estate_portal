@@ -5,9 +5,9 @@ from properties.models import Category
 
 class CategoryListSerializer(serializers.ModelSerializer):
     """
-    Serializer for Category model.
+    Serializer to list/retrieve category.
     """
-    category_name = serializers.CharField(required=True, allow_null=False, allow_blank=False)
+    category_name = serializers.CharField(max_length=100, required=True, allow_null=False, allow_blank=False)
 
     class Meta(object):
         model = Category
@@ -28,8 +28,8 @@ class CategorySerializer(CategoryListSerializer):
     list_url = serializers.SerializerMethodField(read_only=True)
 
     class Meta(CategoryListSerializer.Meta):
-        pass
+        fields = CategoryListSerializer.Meta.fields + ('list_url',)
 
     def get_list_url(self, instance):
-        return reverse('category-list', request=self.context['request'])
+        return reverse('category_list', request=self.context['request'])
         
