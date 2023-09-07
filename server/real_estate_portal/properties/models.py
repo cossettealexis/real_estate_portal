@@ -3,6 +3,8 @@ from django.db import models
 from django.shortcuts import reverse
 from django.utils.text import slugify
 
+from core.utils import upload_to
+
 
 CATEGORY_CHOICES = (("S", "Rented"), ("SW", "Vacation Rental"), ("OW", "Resedential"))
 
@@ -32,7 +34,7 @@ class Pictures(models.Model):
     """
     Model representing pictures.
     """
-    picture = models.ImageField(blank=False, null=False, db_column="picture")
+    picture = models.FileField(upload_to=upload_to(None, filename='properties'), blank=False, null=False, db_column="picture")
     index = models.CharField(max_length=100, blank=True, null=True, db_column="index")
     isVideo = models.BooleanField(blank=True, null=True, db_column="is_video")
 
