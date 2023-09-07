@@ -18,7 +18,7 @@ ADDRESS_CHOICES = (
 
 class Category(models.Model):
     category_name = models.CharField(
-        max_length=100, blank=True, null=True, db_column="category_name"
+        max_length=100, blank=False, null=False, db_column="category_name"
     )
 
     class Meta(object):
@@ -42,6 +42,9 @@ class Pictures(models.Model):
         verbose_name = "Picture"
         verbose_name_plural = "Pictures"
         db_table = "picture"
+
+    def __str__(self):
+        return self.picture.url
 
 
 class Properties(models.Model):

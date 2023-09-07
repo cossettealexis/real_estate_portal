@@ -3,4 +3,5 @@ migrations/
 .DS_Store
 *.pyc
 static/
+media/
 .env

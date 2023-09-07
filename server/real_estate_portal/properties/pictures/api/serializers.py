@@ -1,11 +1,12 @@
 from rest_framework import serializers
 from properties.models import Pictures
+from rest_framework.reverse import reverse
 
-class PicturesListSerializer(serializers.ModelSerializer):
+class PictureListSerializer(serializers.ModelSerializer):
     """
     Serializer to list/retrieve picture.
     """
-    picture = serializers.FileField(required=True, allow_null=False, allow_blank=False)
+    picture = serializers.FileField(required=True)
     index = serializers.CharField(max_length=100, required=False, allow_null=True, allow_blank=True)
     isVideo = serializers.BooleanField(required=False)
 
@@ -17,10 +18,17 @@ class PicturesListSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'index',
-            'isVideo'
+            'isVideo',
             'picture',
         )
 
-class PicturesChangeSerializer(PicturesListSerializer):
-    class Meta(PicturesListSerializer.Meta):
-        pass
+
+class PictureSerializer(PictureListSerializer):
+    """
+    Serializer to use in relations,
+    includes link to list endpoint.
+    """
+    list_url = serializers.SerializerMethodField(read_only=True)
+
+    def get_list_url(self, instance):
+        return reverse('picture_list', request=self.context['request'])
