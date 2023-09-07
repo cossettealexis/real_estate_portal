@@ -30,5 +30,8 @@ class PictureSerializer(PictureListSerializer):
     """
     list_url = serializers.SerializerMethodField(read_only=True)
 
+    class Meta(PictureListSerializer.Meta):
+        fields = PictureListSerializer.Meta.fields + ('list_url',)
+
     def get_list_url(self, instance):
-        return reverse('picture_list', request=self.context['request'])
+        return reverse('pictures-list', request=self.context['request'])

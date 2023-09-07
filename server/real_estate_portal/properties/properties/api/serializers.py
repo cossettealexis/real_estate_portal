@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.reverse import reverse
 from properties.models import Properties
 from properties.category.api.serializers import CategorySerializer
+from properties.pictures.api.serializers import PictureSerializer
 
 
 class PropertyListSerializer(serializers.ModelSerializer):
@@ -16,7 +17,7 @@ class PropertyListSerializer(serializers.ModelSerializer):
     buildYear = serializers.IntegerField(required=True),
     city = serializers.CharField(max_length=100, required=True, allow_null=False, allow_blank=True)
     country = serializers.CharField(max_length=100, required=True, allow_null=False, allow_blank=True)
-    image = serializers.FileField(required=False)
+    image = PictureSerializer(required=True)
     longDescription = serializers.CharField(source='longDesc', required=True, allow_null=False, allow_blank=False)
     rentalStatus = serializers.CharField(max_length=50, required=False, allow_null=True, allow_blank=True)
     purchasePrice = serializers.FloatField(required=True)
@@ -64,5 +65,5 @@ class PropertySerializer(PropertyListSerializer):
         fields = PropertyListSerializer.Meta.fields + ('list_url',)
 
     def get_list_url(self, instance):
-        return reverse('property_list', request=self.context['request'])
+        return reverse('properties-list', request=self.context['request'])
         
