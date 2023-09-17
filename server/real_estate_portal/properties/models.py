@@ -34,7 +34,7 @@ class Pictures(models.Model):
     """
     Model representing pictures.
     """
-    picture = models.FileField(upload_to=upload_to(None, filename='properties'), blank=False, null=False, db_column="picture")
+    picture = models.ImageField(upload_to=upload_to(None, filename='properties'), blank=False, null=False, db_column="picture")
     index = models.CharField(max_length=100, blank=True, null=True, db_column="index")
     isVideo = models.BooleanField(blank=True, null=True, db_column="is_video")
 
@@ -43,8 +43,6 @@ class Pictures(models.Model):
         verbose_name_plural = "Pictures"
         db_table = "picture"
 
-    def __str__(self):
-        return self.picture.url
 
 
 class Properties(models.Model):
@@ -86,12 +84,11 @@ class Properties(models.Model):
         null=False,
         db_column="purchase_price",
     )
-    image = models.ForeignKey(
+    image = models.ManyToManyField(
         Pictures,
         verbose_name="Picture",
         blank=True,
         null=True,
-        on_delete=models.CASCADE,
         db_column="picture",
     )
     longDesc = models.TextField(
@@ -108,7 +105,7 @@ class Properties(models.Model):
     rentalStatus = models.CharField(
         max_length=50, blank=True, null=True, db_column="rental_status"
     )
-    slug = models.SlugField()
+    slug = models.SlugField(null=True, blank=True)
 
     class Meta(object):
         verbose_name = "Property"

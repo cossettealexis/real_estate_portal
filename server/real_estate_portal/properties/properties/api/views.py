@@ -11,7 +11,6 @@ class PropertyViewSet(ModelViewSet):
     model = Properties
     authentication_classes = (TokenAuthentication, )
     queryset = Properties.objects.select_related(
-        'image',
         'type',
     ).all()
     serializer_class = PropertyListSerializer

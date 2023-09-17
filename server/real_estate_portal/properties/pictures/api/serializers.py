@@ -6,7 +6,7 @@ class PictureListSerializer(serializers.ModelSerializer):
     """
     Serializer to list/retrieve picture.
     """
-    picture = serializers.FileField(required=True)
+    picture = serializers.ImageField(required=False, allow_null=True)
     index = serializers.CharField(max_length=100, required=False, allow_null=True, allow_blank=True)
     isVideo = serializers.BooleanField(required=False)
 
@@ -23,15 +23,15 @@ class PictureListSerializer(serializers.ModelSerializer):
         )
 
 
-class PictureSerializer(PictureListSerializer):
-    """
-    Serializer to use in relations,
-    includes link to list endpoint.
-    """
-    list_url = serializers.SerializerMethodField(read_only=True)
+# class PictureSerializer(PictureListSerializer):
+#     """
+#     Serializer to use in relations,
+#     includes link to list endpoint.
+#     """
+#     list_url = serializers.SerializerMethodField(read_only=True)
 
-    class Meta(PictureListSerializer.Meta):
-        fields = PictureListSerializer.Meta.fields + ('list_url',)
+#     class Meta(PictureListSerializer.Meta):
+#         fields = PictureListSerializer.Meta.fields + ('list_url',)
 
-    def get_list_url(self, instance):
-        return reverse('pictures-list', request=self.context['request'])
+#     def get_list_url(self, instance):
+#         return reverse('pictures-list', request=self.context['request'])
