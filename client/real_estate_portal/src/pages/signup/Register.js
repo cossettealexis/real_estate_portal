@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/Register.css';
 
 function Signup() {
+  const navigate = useNavigate();
   const apiHost = process.env.REACT_APP_API_HOST;
   const [apiError, setApiError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const validationSchema = Yup.object({
     first_name: Yup.string().required('First Name is required'),
@@ -34,14 +37,24 @@ function Signup() {
     },
     validationSchema,
     onSubmit: (values) => {
+      // Set loading state while making the API request
+      setApiError(null);
+      setIsLoading(true);
+
       axios
         .post(apiHost + '/api/register/', values)
         .then((response) => {
           console.log('API response:', response.data);
           setApiError(null);
+          setIsLoading(false); // Turn off loading state
+
+          // Redirect to the residential form page upon successful registration
+          navigate('/residential-address');
         })
         .catch((error) => {
           console.error('API error:', error);
+          setIsLoading(false); // Turn off loading state
+
           if (error.response && error.response.data) {
             const errorMessages = error.response.data;
             // Create an object to store field-specific error messages
@@ -53,8 +66,8 @@ function Signup() {
             });
 
             // Set the field-specific error messages
-            console.log(fieldErrors)
-            console.log(fieldErrors["I"])
+            console.log(fieldErrors);
+            console.log(fieldErrors['I']);
             if (fieldErrors.error) {
               setApiError(error.response.data.error);
             } else {
@@ -72,14 +85,19 @@ function Signup() {
   };
 
   return (
-    <section className="signup">
+    <section className="signup" style={{
+      height: '100vh',
+      marginLeft: '25%',
+      marginRight: '25%',
+      marginTop: '5%',
+    }}>
       <div className="container mb-5">
         <div className="text-center mb-5">
           <h3 style={{ fontSize: '3.5rem', lineHeight: '3.5rem', fontWeight: '700', letterSpacing: '2px' }}>
             Create your account
           </h3>
         </div>
-        {apiError && <div className="text-danger">{apiError}</div>} {/* Display general error message */}
+        {apiError && <div className="text-danger">{apiError}</div>}
         <form onSubmit={formik.handleSubmit} className="needs-validation" noValidate>
           {/* First Name and Last Name */}
           <div className="row form-row">
@@ -258,13 +276,19 @@ function Signup() {
           </div>
 
           <div className="col-md-12 d-flex align-items-end mt-3">
-            <button
-              type="submit"
-              className={`btn w-100 ${formik.values.agree_terms ? 'btn-primary' : 'btn-dark'}`}
-              disabled={!formik.values.agree_terms || !formik.isValid}
-            >
-              Continue
-            </button>
+          <button
+            type="submit"
+            className={`btn w-100 ${
+              (isLoading || !formik.values.agree_terms || !formik.isValid) ? 'btn-dark' : 'btn-primary'
+            }`}
+            disabled={isLoading || !formik.isValid}
+          >
+            {isLoading ? (
+              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            ) : (
+              <strong>Continue</strong>
+            )}
+          </button>
           </div>
         </form>
       </div>

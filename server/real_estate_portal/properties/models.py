@@ -222,20 +222,6 @@ class ProjectedRentalExpense(models.Model):
         db_table = "projected_rental_expense"
 
 
-class UserInvestorProfile(models.Model):
-    userId = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        verbose_name="User",
-        blank=False,
-        null=False,
-        on_delete=models.CASCADE,
-        db_column="user_id",
-    )
-
-    class Meta(object):
-        db_table = "user_investor_profile"
-
-
 class PropertyStock(models.Model):
     propertyId = models.ForeignKey(
         Properties,
