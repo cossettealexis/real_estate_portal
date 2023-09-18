@@ -57,6 +57,11 @@ class UserInvestorProfile(models.Model):
         ('non_us_citizen', 'Non U.S. Citizen or Resident'),
     )
 
+    ACCOUNT_TYPES = (
+        ('individual', 'Individual'),
+        ('entity', 'Entity'),
+    )
+
     user = models.OneToOneField(
         User,
         verbose_name="User",
@@ -77,6 +82,12 @@ class UserInvestorProfile(models.Model):
         choices=CITIZENSHIP_CHOICES,
         blank=True,
         null=True,
+    )
+
+    account_type = models.CharField(
+        max_length=20,
+        choices=ACCOUNT_TYPES,
+        default='individual',
     )
 
 

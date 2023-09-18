@@ -78,6 +78,7 @@ class UserInvestorProfileSerializer(serializers.ModelSerializer):
             'postal_code',
             'same_as_home',
             'citizenship',
+            'account_type',
         )
 
 

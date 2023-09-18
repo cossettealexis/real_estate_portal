@@ -42,7 +42,7 @@ const CitizenshipForm = () => {
       const response = await axios.patch(requestUrl, payload, { headers });
 
       // Redirect to the next page upon successful submission
-      navigate('/account-type');
+      navigate('/account-type', { state: { data: response.data } });
     } catch (error) {
       console.error('Error:', error);
     } finally {
