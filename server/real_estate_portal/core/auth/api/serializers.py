@@ -1,4 +1,5 @@
 from core.models import User, Country, UserInvestorProfile
+from rest_framework.authtoken.models import Token
 
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
@@ -21,6 +22,7 @@ class UserSerializer(CountryFieldMixin, serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     country = serializers.CharField(required=False, allow_null=True, allow_blank=True)
     phone_number = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+    token = serializers.SerializerMethodField(read_only=True)
 
     class Meta(object):
         model = User
@@ -35,7 +37,14 @@ class UserSerializer(CountryFieldMixin, serializers.ModelSerializer):
             'phone_number',
             'email',
             'password',
+            'token',
         )
+
+    def get_token(self, obj):
+        try:
+            return Token.objects.get(user=obj).key
+        except Token.DoesNotExist:
+            return None
 
     def create(self, validated_data):
         user = User.objects.create(
@@ -54,9 +63,22 @@ class UserSerializer(CountryFieldMixin, serializers.ModelSerializer):
     
 
 class UserInvestorProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
     class Meta:
         model = UserInvestorProfile
-        fields = '__all__'
+        read_only_fields = (
+            'id',
+        )
+        fields = (
+            'id',
+            'user',
+            'apartment_or_suite',
+            'city',
+            'state',
+            'postal_code',
+            'same_as_home',
+            'citizenship',
+        )
 
 
 class CountrySerializer(serializers.ModelSerializer):

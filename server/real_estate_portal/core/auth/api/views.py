@@ -139,7 +139,8 @@ class CountryViewSet(ListAPIView):
 @permission_classes([IsAuthenticated])
 def update_user_profile(request, user_id):
     try:
-        user_profile = UserInvestorProfile.objects.get(user=user_id)
+        user = User.objects.get(pk=user_id)
+        user_profile = UserInvestorProfile.objects.get(user=user)
     except UserInvestorProfile.DoesNotExist:
         return Response({'error': 'User profile not found.'}, status=status.HTTP_404_NOT_FOUND)
     

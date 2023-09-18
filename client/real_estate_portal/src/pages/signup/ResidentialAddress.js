@@ -18,7 +18,7 @@ const ResidentialForm = (props) => {
 
   const initialValues = {
     street: '',
-    aptSuite: '',
+    apartment_or_suite: '',
     city: '',
     state: '',
     postal_code: '',
@@ -27,7 +27,7 @@ const ResidentialForm = (props) => {
 
   const validationSchema = Yup.object().shape({
     street: Yup.string().required('Street is required'),
-    aptSuite: Yup.string(),
+    apartment_or_suite: Yup.string(),
     city: Yup.string().required('City is required'),
     state: Yup.string().required('State is required'),
     postal_code: Yup.string().required('Postal Code is required'),
@@ -39,7 +39,7 @@ const ResidentialForm = (props) => {
       const payload = {
         user_id,
         street: values.street,
-        aptSuite: values.aptSuite,
+        apartment_or_suite: values.apartment_or_suite,
         city: values.city,
         state: values.state,
         postal_code: values.postal_code,
@@ -62,7 +62,7 @@ const ResidentialForm = (props) => {
       setIsLoading(false);
 
       // Redirect to the next page upon successful update
-      navigate('/citizenship', { state: { responseData: response.data } });
+      navigate('/citizenship', { state: { data: response.data } });
     } catch (error) {
       console.error('Error updating residential address:', error);
       setIsLoading(false);
@@ -123,14 +123,14 @@ const ResidentialForm = (props) => {
                 </div>
               </div>
               <div className="col-md-12 mb-3">
-                <div className={`form-group ${touched.aptSuite && errors.aptSuite ? 'has-danger' : ''}`}>
+                <div className={`form-group ${touched.apartment_or_suite && errors.apartment_or_suite ? 'has-danger' : ''}`}>
                   <Field
                     type="text"
-                    name="aptSuite"
-                    className={`form-control ${touched.aptSuite && errors.aptSuite ? 'is-invalid' : ''}`}
+                    name="apartment_or_suite"
+                    className={`form-control ${touched.apartment_or_suite && errors.apartment_or_suite ? 'is-invalid' : ''}`}
                     placeholder="Apt, Suite. (optional)"
                   />
-                  <ErrorMessage name="aptSuite" component="div" className="text-danger" />
+                  <ErrorMessage name="apartment_or_suite" component="div" className="text-danger" />
                 </div>
               </div>
               <div className="col-md-12 mb-3">

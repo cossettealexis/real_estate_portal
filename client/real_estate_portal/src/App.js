@@ -10,6 +10,7 @@ import AccountTypeForm from './pages/signup/AccountType';
 import BirthdateForm from './pages/signup/BirthDate';
 import NetworthForm from './pages/signup/NetWorth';
 import BankForm from './pages/signup/Bank';
+import DocumentsForm from './pages/signup/UploadDocuments';
 
 import Home from './pages/Home';
 import Properties from './components/properties/Properties';
@@ -28,6 +29,7 @@ function App() {
           <Route path="/birth-date" element={<BirthdateForm />} />
           <Route path="/networth" element={<NetworthForm />} />
           <Route path="/bank" element={<BankForm />} />
+          <Route path="/documents" element={<DocumentsForm />} />
           <Route path="/properties" element={<Properties />} />
         </Routes>
       </Router>
