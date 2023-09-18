@@ -8,6 +8,7 @@ import ResidentialForm from './pages/signup/ResidentialAddress';
 import CitizenshipForm from './pages/signup/Citizenship';
 import AccountTypeForm from './pages/signup/AccountType';
 import BirthdateForm from './pages/signup/BirthDate';
+import NetworthForm from './pages/signup/NetWorth';
 
 import Home from './pages/Home';
 import Properties from './components/properties/Properties';
@@ -24,6 +25,7 @@ function App() {
           <Route path="/citizenship" element={<CitizenshipForm />} />
           <Route path="/account-type" element={<AccountTypeForm />} />
           <Route path="/birth-date" element={<BirthdateForm />} />
+          <Route path="/networth" element={<NetworthForm />} />
           <Route path="/properties" element={<Properties />} />
         </Routes>
       </Router>
