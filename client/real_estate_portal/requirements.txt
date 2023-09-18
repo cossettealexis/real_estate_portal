@@ -1,2 +1,6 @@
+axios 
+react-router-dom 
+react-bootstrap 
 formik
 yup
+react-select

@@ -29,7 +29,7 @@ def register_user(request):
     """
     if request.method == 'POST':
         serializer = UserSerializer(data=request.data)
-        country_code = request.data.get('country')
+        country_code = request.data.get('country_code')
         phone_number = request.data.get('phone_number')
 
         if not is_valid_phone_number_format(country_code, phone_number):

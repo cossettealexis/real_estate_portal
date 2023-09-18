@@ -33,10 +33,12 @@ def is_valid_phone_number_format(country_code, phone_number):
         """
         try:
             # Construct the full phone number with the country code
-            full_phone_number = f"+{country_code}{phone_number}"
+            full_phone_number = f"{country_code}{phone_number}"
+            print(full_phone_number)
             
             # Parse the phone number
             parsed_phone_number = phonenumbers.parse(full_phone_number, None)
+            print(parsed_phone_number)
 
             # Check if the phone number is valid for the selected country
             return (
