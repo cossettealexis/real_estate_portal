@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -12,6 +12,9 @@ const ResidentialForm = (props) => {
   const navigate = useNavigate();
   const { data } = location.state;
   const user_id = data.id;
+
+  const [apiError, setApiError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const initialValues = {
     street: '',
@@ -28,7 +31,7 @@ const ResidentialForm = (props) => {
     city: Yup.string().required('City is required'),
     state: Yup.string().required('State is required'),
     postal_code: Yup.string().required('Postal Code is required'),
-    same_as_home: Yup.boolean(), // Removed the "oneOf" validation
+    same_as_home: Yup.boolean(),
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -40,32 +43,60 @@ const ResidentialForm = (props) => {
         city: values.city,
         state: values.state,
         postal_code: values.postal_code,
-        same_as_home: values.same_as_home || false, // Set to false if checkbox is not checked
+        same_as_home: values.same_as_home || false,
       };
-      console.log(data.token)
+
       const requestUrl = `${apiHost}/api/update-user-profile/${user_id}/`;
       const headers = {
         'Authorization': `Token ${data.token}`,
       };
+
+      // Set loading state while making the API request
+      setApiError(null);
+      setIsLoading(true);
+
       const response = await axios.patch(requestUrl, payload, { headers });
       console.log('Residential address updated successfully:', response.data);
+
+      setApiError(null);
+      setIsLoading(false);
+
+      // Redirect to the next page upon successful update
+      navigate('/citizenship', { state: { responseData: response.data } });
     } catch (error) {
       console.error('Error updating residential address:', error);
+      setIsLoading(false);
+
+      if (error.response && error.response.data) {
+        const errorMessages = error.response.data;
+        const fieldErrors = {};
+
+        Object.keys(errorMessages).forEach((fieldName) => {
+          fieldErrors[fieldName] = errorMessages[fieldName][0];
+        });
+
+        if (fieldErrors.error) {
+          setApiError(error.response.data.error);
+        } else {
+          Formik.setErrors(fieldErrors);
+        }
+      } else {
+        setApiError('An error occurred while processing your request.');
+      }
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <section className="residential"
-      style={{
-        height: '100vh',
-        marginLeft: '25%',
-        marginRight: '25%',
-        marginTop: '5%',
-      }}>
+    <section className="residential" style={{
+      height: '100vh',
+      marginLeft: '25%',
+      marginRight: '25%',
+      marginTop: '5%',
+    }}>
       <div className="pb-4">
-        <h3 style={{ fontSize: '2.5rem', lineHeight: '3.5rem', fontWeight: '700' }}>
+        <h3 style={{ fontSize: '2rem', lineHeight: '3.5rem', fontWeight: '700' }}>
           What's your residential address?
         </h3>
         <p style={{ fontWeight: '500' }}>
@@ -77,7 +108,7 @@ const ResidentialForm = (props) => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ handleSubmit, handleChange, values, touched, errors }) => (
+        {({ handleSubmit, handleChange, values, touched, errors, isSubmitting }) => (
           <Form className="needs-validation" noValidate>
             <div className="form-row">
               <div className="col-md-12 mb-3">
@@ -151,11 +182,15 @@ const ResidentialForm = (props) => {
               <button
                 type="submit"
                 className={`btn btn-md ${
-                  Object.keys(errors).length > 0 ? 'btn-secondary' : 'btn-primary'
+                  (isLoading || isSubmitting) ? 'btn-secondary' : 'btn-primary'
                 } w-100`}
-                disabled={Object.keys(errors).length > 0}
+                disabled={isLoading || isSubmitting}
               >
-                <strong>Press Enter &rarr;</strong>
+                {isLoading ? (
+                  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                ) : (
+                  <strong>Press Enter &rarr;</strong>
+                )}
               </button>
             </div>
           </Form>

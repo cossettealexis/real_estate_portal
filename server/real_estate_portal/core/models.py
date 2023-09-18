@@ -51,6 +51,12 @@ class User(AbstractUser):
 
 
 class UserInvestorProfile(models.Model):
+    CITIZENSHIP_CHOICES = (
+        ('us_citizen', 'U.S. Citizen'),
+        ('us_resident', 'U.S. Resident'),
+        ('non_us_citizen', 'Non U.S. Citizen or Resident'),
+    )
+
     user = models.OneToOneField(
         User,
         verbose_name="User",
@@ -64,6 +70,14 @@ class UserInvestorProfile(models.Model):
     state = models.CharField(max_length=50, blank=True)
     postal_code = models.CharField(max_length=20, blank=True)
     same_as_home = models.BooleanField(default=True)
+
+    citizenship = models.CharField(
+        'Citizenship',
+        max_length=15,
+        choices=CITIZENSHIP_CHOICES,
+        blank=True,
+        null=True,
+    )
 
 
     class Meta(object):

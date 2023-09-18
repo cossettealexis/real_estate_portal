@@ -5,6 +5,8 @@ import Navbar from './components/core/Navbar';
 
 import Register from './pages/signup/Register';
 import ResidentialForm from './pages/signup/ResidentialAddress';
+import CitizenshipForm from './pages/signup/Citizenship';
+import AccountTypeForm from './pages/signup/AccountType';
 import Home from './pages/Home';
 import Properties from './components/properties/Properties';
 
@@ -17,6 +19,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/residential-address" element={<ResidentialForm />} />
+          <Route path="/citizenship" element={<CitizenshipForm />} />
+          <Route path="/account-type" element={<AccountTypeForm />} />
           <Route path="/properties" element={<Properties />} />
         </Routes>
       </Router>
