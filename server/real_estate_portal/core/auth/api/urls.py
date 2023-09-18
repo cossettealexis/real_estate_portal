@@ -8,6 +8,7 @@ from core.auth.api.views import (
     update_user_profile,
     UserViewSet,
     CountryViewSet,
+    update_user_profile,
 )
 
 
@@ -18,7 +19,7 @@ urlpatterns = [
     path('register/', register_user, name='register'),
     path('login/', user_login, name='login'),
     path('logout/', user_logout, name='logout'),
-    path('update-user-profile/<int:user_id>/', update_user_profile, name='update_user_profile'),
+    path('update-user-profile/<int:user_id>/', update_user_profile, name='update-user-profile'),
     path('countries/', CountryViewSet.as_view(), name='countries'),
     path('', include(router.urls)),
 ]

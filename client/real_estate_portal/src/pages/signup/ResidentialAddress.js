@@ -1,15 +1,25 @@
 import React from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
-const ResidentialForm = () => {
+const ResidentialForm = (props) => {
+  const apiHost = process.env.REACT_APP_API_HOST;
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { data } = location.state;
+  const user_id = data.id;
+
   const initialValues = {
     street: '',
     aptSuite: '',
     city: '',
     state: '',
-    postalCode: '',
-    agreeTerms: false,
+    postal_code: '',
+    same_as_home: false,
   };
 
   const validationSchema = Yup.object().shape({
@@ -17,41 +27,51 @@ const ResidentialForm = () => {
     aptSuite: Yup.string(),
     city: Yup.string().required('City is required'),
     state: Yup.string().required('State is required'),
-    postalCode: Yup.string().required('Postal Code is required'),
-    agreeTerms: Yup.boolean().oneOf([true], 'You must agree to the terms'),
+    postal_code: Yup.string().required('Postal Code is required'),
+    same_as_home: Yup.boolean(), // Removed the "oneOf" validation
   });
 
-  const handleSubmit = (values) => {
-    // Handle form submission here
-    console.log(values);
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const payload = {
+        user_id,
+        street: values.street,
+        aptSuite: values.aptSuite,
+        city: values.city,
+        state: values.state,
+        postal_code: values.postal_code,
+        same_as_home: values.same_as_home || false, // Set to false if checkbox is not checked
+      };
+      console.log(data.token)
+      const requestUrl = `${apiHost}/api/update-user-profile/${user_id}/`;
+      const headers = {
+        'Authorization': `Token ${data.token}`,
+      };
+      const response = await axios.patch(requestUrl, payload, { headers });
+      console.log('Residential address updated successfully:', response.data);
+    } catch (error) {
+      console.error('Error updating residential address:', error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <section
-      className="residential"
-      id="residential"
+    <section className="residential"
       style={{
         height: '100vh',
         marginLeft: '25%',
         marginRight: '25%',
         marginTop: '5%',
-      }}
-    >
+      }}>
       <div className="pb-4">
-        <h3
-          style={{
-            fontSize: '2.5rem',
-            lineHeight: '3.5rem',
-            fontWeight: '700',
-          }}
-        >
+        <h3 style={{ fontSize: '2.5rem', lineHeight: '3.5rem', fontWeight: '700' }}>
           What's your residential address?
         </h3>
         <p style={{ fontWeight: '500' }}>
           We'll use your street address for any tax reporting or mailing requirements for your state.
         </p>
       </div>
-
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -105,26 +125,25 @@ const ResidentialForm = () => {
                 </div>
               </div>
               <div className="col-md-12 mb-3">
-                <div className={`form-group ${touched.postalCode && errors.postalCode ? 'has-danger' : ''}`}>
+                <div className={`form-group ${touched.postal_code && errors.postal_code ? 'has-danger' : ''}`}>
                   <Field
                     type="text"
-                    name="postalCode"
-                    className={`form-control ${touched.postalCode && errors.postalCode ? 'is-invalid' : ''}`}
+                    name="postal_code"
+                    className={`form-control ${touched.postal_code && errors.postal_code ? 'is-invalid' : ''}`}
                     placeholder="Postal Code"
                   />
-                  <ErrorMessage name="postalCode" component="div" className="text-danger" />
+                  <ErrorMessage name="postal_code" component="div" className="text-danger" />
                 </div>
               </div>
             </div>
             <div className="form-check mt-2">
               <Field
                 type="checkbox"
-                name="agreeTerms"
+                name="same_as_home"
                 className="form-check-input"
-                id="agreeTerms"
-                required
+                id="same_as_home"
               />
-              <label className="form-check-label" htmlFor="agreeTerms">
+              <label className="form-check-label" htmlFor="same_as_home">
                 <small style={{ fontWeight: '500' }}>My mailing address is the same</small>
               </label>
             </div>

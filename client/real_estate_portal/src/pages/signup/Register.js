@@ -47,9 +47,10 @@ function Signup() {
           console.log('API response:', response.data);
           setApiError(null);
           setIsLoading(false); // Turn off loading state
+          const data = response.data;
 
           // Redirect to the residential form page upon successful registration
-          navigate('/residential-address');
+          navigate('/residential-address', { state: { data: response.data } });
         })
         .catch((error) => {
           console.error('API error:', error);

@@ -1,4 +1,4 @@
-from core.models import User, Country
+from core.models import User, Country, UserInvestorProfile
 
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
@@ -52,6 +52,12 @@ class UserSerializer(CountryFieldMixin, serializers.ModelSerializer):
 
         return user
     
+
+class UserInvestorProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserInvestorProfile
+        fields = '__all__'
+
 
 class CountrySerializer(serializers.ModelSerializer):
     phone_number_code = serializers.CharField(source='name')

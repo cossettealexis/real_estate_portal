@@ -59,6 +59,12 @@ class UserInvestorProfile(models.Model):
         on_delete=models.CASCADE,
         db_column="user_id",
     )
+    apartment_or_suite = models.CharField(max_length=50, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    state = models.CharField(max_length=50, blank=True)
+    postal_code = models.CharField(max_length=20, blank=True)
+    same_as_home = models.BooleanField(default=True)
+
 
     class Meta(object):
         db_table = "user_investor_profile"

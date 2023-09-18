@@ -5,9 +5,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListAPIView
 
-from core.models import User, Country
+from core.models import User, Country, UserInvestorProfile
 from core.utils import create_token_and_login, is_valid_phone_number_format
-from core.auth.api.serializers import UserSerializer, CountrySerializer
+from core.auth.api.serializers import UserSerializer, CountrySerializer, UserInvestorProfileSerializer
 from core.permissions import IsOwnerOrAdminOrReadOnly
 
 import phonenumbers
@@ -133,3 +133,22 @@ class CountryViewSet(ListAPIView):
         serializer = CountrySerializer(countries, many=True)
 
         return Response(serializer.data)
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_user_profile(request, user_id):
+    try:
+        user_profile = UserInvestorProfile.objects.get(user=user_id)
+    except UserInvestorProfile.DoesNotExist:
+        return Response({'error': 'User profile not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+    if user_profile.user != request.user:
+        return Response({'error': 'Permission denied.'}, status=status.HTTP_403_FORBIDDEN)
+    
+    serializer = UserInvestorProfileSerializer(user_profile, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
