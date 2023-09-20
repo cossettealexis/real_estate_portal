@@ -90,6 +90,27 @@ class UserInvestorProfile(models.Model):
         default='individual',
     )
 
+    birthdate = models.DateField(null=True, blank=True)
+    ssn = models.CharField(max_length=9, blank=True)
+
+    NETWORTH_CHOICES = [
+        ('Less than $1,000', 'Less than $1,000'),
+        ('$1,000 - $10,000', '$1,000 - $10,000'),
+        ('$10,001 - $50,000', '$10,001 - $50,000'),
+        ('$50,001 - $100,000', '$50,001 - $100,000'),
+        ('$100,001 - $500,000', '$100,001 - $500,000'),
+        ('$500,001 - $1,000,000', '$500,001 - $1,000,000'),
+        ('$1,000,001 - $5,000,000', '$1,000,001 - $5,000,000'),
+        ('More than $5,000,000', 'More than $5,000,000'),
+    ]
+
+    networth = models.CharField(
+        max_length=500,
+        choices=NETWORTH_CHOICES,
+        blank=True,
+        null=True,
+    )
+
 
     class Meta(object):
         db_table = "user_investor_profile"

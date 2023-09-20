@@ -79,6 +79,9 @@ class UserInvestorProfileSerializer(serializers.ModelSerializer):
             'same_as_home',
             'citizenship',
             'account_type',
+            'birthdate',
+            'ssn',
+            'networth',
         )
 
 

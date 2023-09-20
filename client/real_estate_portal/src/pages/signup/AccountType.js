@@ -25,19 +25,18 @@ const AccountTypeForm = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      // Make an API request to update the user profile
-      const response = await fetch(`${apiHost}/api/update-user-profile/${user_id}/`, {
-        method: 'PATCH',
+      // Make an API request to update the user profile using Axios
+      const userToken = data.user.token; // Use the token directly from data
+      const response = await axios.patch(`${apiHost}/api/update-user-profile/${user_id}/`, {
+        account_type: values.accountType, // Corrected field name
+      }, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Token ${data.user.token}`,
+          Authorization: `Token ${userToken}`,
         },
-        body: JSON.stringify({
-          account_type: values.accountType,
-        }),
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         console.log('User profile updated successfully:', response.data);
         // Redirect to the next page upon successful update
         navigate('/birth-date', { state: { data: response.data } });

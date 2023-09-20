@@ -1,14 +1,24 @@
-import React from 'react';
-import { Formik, Form, Field } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik'; // Import ErrorMessage
 import * as Yup from 'yup';
-import { Button, FormGroup, FormControl } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import { Button, Spinner } from 'react-bootstrap';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const BirthdateForm = () => {
-  const initialValues = {
-    birthdate: '', // You can set the default value if needed
-    ssn: '',
-  };
+  const apiHost = process.env.REACT_APP_API_HOST;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { data } = location.state;
+  const userId = data.user.id;
+
+  // Initialize form values state with data from the API response
+  const [formValues, setFormValues] = useState({
+    birthdate: data.birthdate || '',
+    ssn: data.ssn || '',
+  });
 
   const validationSchema = Yup.object().shape({
     birthdate: Yup.date().required('Date of birth is required'),
@@ -17,27 +27,61 @@ const BirthdateForm = () => {
       .required('Social Security Number is required'),
   });
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    // Handle form submission here
-    console.log(values);
-    // You can add your submission logic here
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const userToken = data.user.token;
+      const response = await axios.patch(
+        `${apiHost}/api/update-user-profile/${userId}/`,
+        {
+          birthdate: values.birthdate,
+          ssn: values.ssn,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Token ${userToken}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log('User profile updated successfully:', response.data);
+        // Redirect to the next page upon successful update
+        navigate('/networth', { state: { data: response.data } });
+      } else {
+        console.error('Error updating user profile:', response.status);
+      }
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <section className="birthdate" style={{
-      height: '100vh',
-      marginLeft: '25%',
-      marginRight: '25%',
-      marginTop: '5%',
-    }}>
+    <section
+      className="birthdate"
+      style={{
+        height: '100vh',
+        marginLeft: '25%',
+        marginRight: '25%',
+        marginTop: '5%',
+      }}
+    >
       <div className="mb-4">
-        <h3 style={{ fontSize: '2rem', lineHeight: '3.5rem', fontWeight: '700' }}>
+        <h3
+          style={{
+            fontSize: '2rem',
+            lineHeight: '3.5rem',
+            fontWeight: '700',
+          }}
+        >
           What's your date of birth and Social Security Number?
         </h3>
       </div>
 
       <Formik
-        initialValues={initialValues}
+        initialValues={formValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
@@ -45,26 +89,36 @@ const BirthdateForm = () => {
           <Form className="needs-validation" noValidate>
             <div className="form-row">
               <div className="col-md-12 mb-3">
-                <FormGroup>
-                    <Field
-                      type="date"
-                      name="birthdate"
-                      as={FormControl}
-                      placeholder="Birthdate"
-                      required
-                    />
-                  </FormGroup>
+                <div className="form-group">
+                  <Field
+                    type="date"
+                    name="birthdate"
+                    className="form-control"
+                    placeholder="Birthdate"
+                    required
+                  />
+                  <ErrorMessage
+                    name="birthdate"
+                    component="div"
+                    className="text-danger"
+                  />
+                </div>
               </div>
               <div className="col-md-12 mb-3">
-                <FormGroup>
+                <div className="form-group">
                   <Field
                     type="text"
                     name="ssn"
-                    as={FormControl}
+                    className="form-control"
                     placeholder="Social Security Number"
                     required
                   />
-                </FormGroup>
+                  <ErrorMessage
+                    name="ssn"
+                    component="div"
+                    className="text-danger"
+                  />
+                </div>
               </div>
             </div>
             <div className="col-md-6 d-flex align-items-end mt-5 mx-auto">
@@ -74,6 +128,16 @@ const BirthdateForm = () => {
                 className="w-100"
                 disabled={isSubmitting}
               >
+                {isSubmitting ? (
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    className="mr-2"
+                  />
+                ) : null}
                 <strong>Press Enter &rarr;</strong>
               </Button>
             </div>
