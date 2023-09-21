@@ -47,7 +47,7 @@ const NetworthForm = () => {
 
       if (response.status === 200) {
         console.log('User profile updated successfully:', response.data);
-        navigate('/bank', { state: { data: response.data } }); // Redirect to the next page
+        navigate('/documents', { state: { data: response.data } }); // Redirect to the next page
       } else {
         console.error('Error updating user profile:', response.status);
       }

@@ -82,6 +82,7 @@ class UserInvestorProfileSerializer(serializers.ModelSerializer):
             'birthdate',
             'ssn',
             'networth',
+            'verification_document',
         )
 
 

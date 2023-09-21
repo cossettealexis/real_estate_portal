@@ -111,6 +111,12 @@ class UserInvestorProfile(models.Model):
         null=True,
     )
 
+    verification_document = models.FileField(
+        upload_to='verification_documents/',
+        blank=True,
+        null=True,
+    )
+
 
     class Meta(object):
         db_table = "user_investor_profile"
