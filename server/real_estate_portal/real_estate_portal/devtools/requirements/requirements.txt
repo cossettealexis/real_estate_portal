@@ -7,3 +7,4 @@ django-countries==7.5.1
 django-filter==23.2
 phonenumbers==8.13.19
 django-cors-headers==4.2.0
+environ==1.0
