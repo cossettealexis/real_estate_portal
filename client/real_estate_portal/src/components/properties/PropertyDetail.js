@@ -5,6 +5,7 @@ import React from 'react';
 const apiHost = process.env.REACT_APP_API_HOST;
 
 const PropertyDetail = ({ object, investors, amenity }) => {
+  console.log(object)
   return (
     <main className="container mt-4">
       <div className="container-fluid">
@@ -23,15 +24,15 @@ const PropertyDetail = ({ object, investors, amenity }) => {
               </div>
               <div className="carousel-inner">
                 <div className="carousel-item active" data-bs-interval="10000">
-                  <img src={`${apiHost}/${object.property_image}`} className="d-block w-100" alt="..." style={{ height: '500px' }} />
+                  <img src={`${object.image[0].picture}`} className="d-block w-100" alt="..." style={{ height: '500px' }} />
                   <div className="carousel-caption d-none d-md-block"></div>
                 </div>
                 <div className="carousel-item" data-bs-interval="2000">
-                  <img src={`${apiHost}/${object.property_image}`} className="d-block w-100" alt="..." style={{ height: '500px' }} />
+                  <img src={`${object.image[0].picture}`} className="d-block w-100" alt="..." style={{ height: '500px' }} />
                   <div className="carousel-caption d-none d-md-block"></div>
                 </div>
                 <div className="carousel-item">
-                  <img src={`${apiHost}/${object.property_image}`} className="d-block w-100" alt="..." style={{ height: '500px' }} />
+                  <img src={`${object.image[0].picture}`} className="d-block w-100" alt="..." style={{ height: '500px' }} />
                   <div className="carousel-caption d-none d-md-block"></div>
                 </div>
               </div>
@@ -46,9 +47,9 @@ const PropertyDetail = ({ object, investors, amenity }) => {
             </div>
           </div>
           <div className="col-md-3 mr-1">
-            <img src={`${apiHost}/${object.property_image}`} className="d-block w-100 mb-3" alt="..." style={{ height: '155px' }} />
-            <img src={`${apiHost}/${object.property_image}`} className="d-block w-100 mb-3" alt="..." style={{ height: '155px' }} />
-            <img src={`${apiHost}/${object.property_image}`} className="d-block w-100" alt="..." style={{ height: '155px' }} />
+            <img src={`${object.image[1]?.picture || object.image[2]?.picture || object.image[3]?.picture || object.image[0]?.picture}`} className="d-block w-100 mb-3" alt="..." style={{ height: '155px' }} />
+            <img src={`${object.image[2]?.picture || object.image[3]?.picture || object.image[0]?.picture || object.image[2]?.picture}`} className="d-block w-100 mb-3" alt="..." style={{ height: '155px' }} />
+            <img src={`${object.image[3]?.picture || object.image[0]?.picture || object.image[1]?.picture || object.image[2]?.picture}`} className="d-block w-100" alt="..." style={{ height: '155px' }} />
           </div>
         </div>
       </div>
