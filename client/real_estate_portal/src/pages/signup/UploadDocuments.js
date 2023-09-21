@@ -45,7 +45,7 @@ const DocumentsForm = () => {
       },
       {
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
           Authorization: `Token ${data.user.token}`,
         },
       });
@@ -53,7 +53,7 @@ const DocumentsForm = () => {
       setSubmitSuccess(true);
     } catch (error) {
       // If there's an error, set submitError to the error message
-      setSubmitError(error.message);
+      setSubmitError(error.response.data.detail);
     } finally {
       // Don't forget to call setSubmitting(false) when your async logic is done.
       setSubmitting(false);
@@ -64,14 +64,11 @@ const DocumentsForm = () => {
     <section
       className="documents"
       style={{
-        display: 'flex',
-        flexDirection: 'row',
         height: '100vh',
-        marginLeft: '10%',
-        marginRight: '10%',
+        marginLeft: '25%',
+        marginRight: '25%',
         marginTop: '5%',
-      }}
-    >
+      }}>
       <div className="form-container" style={{ height: '100vh' }}>
         <div className="mb-4">
           <h3 style={{ fontSize: '2rem', lineHeight: '3.5rem', fontWeight: '700' }}>
@@ -80,7 +77,7 @@ const DocumentsForm = () => {
         </div>
 
         <div className="row">
-          <div className="col-md-6" style={{ width: '50%' }}>
+          <div className='col-lg-6 col-md-6 col-sm-6' style={{ width: '50%' }}>
             <Formik
               initialValues={{ selectedDocument: 'Driver\'s License (Real Id Compliant)' }}
               onSubmit={handleDocumentSubmit}
@@ -148,7 +145,7 @@ const DocumentsForm = () => {
               )}
             </Formik>
           </div>
-          <div className="col-md-6 mt-5" style={{ width: '50%', height: '46vh', border: '1px dashed #ccc', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          <div className="col-lg-6 col-md-6 col-sm-6 mt-5" style={{ width: '50%', height: '29vh', border: '1px dashed #ccc', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <Formik
               initialValues={{ file: null }}
               onSubmit={handleFileSubmit}
@@ -171,7 +168,6 @@ const DocumentsForm = () => {
                         style={{ display: 'none' }}
                         onChange={async (event) => {
                           setFieldValue('file', event.currentTarget.files[0]);
-                          // Call the API endpoint here
                           try {
                             await handleFileSubmit({ file: event.currentTarget.files[0] }, { setSubmitting: () => {} });
                           } catch (error) {
@@ -191,7 +187,7 @@ const DocumentsForm = () => {
               <Alert variant="success">
                 Document upload successful! <br />
               </Alert>
-              <Button variant="primary">Start Investing</Button>
+              <a href='/properties' className='btn btn-primary' variant='primary'>Start Investing</a>
             </div>
           )}
 

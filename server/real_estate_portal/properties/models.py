@@ -68,8 +68,8 @@ class Properties(models.Model):
     type = models.ForeignKey(
         Category, blank=False, null=False, db_column="type", on_delete=models.CASCADE
     )
-    bed = models.IntegerField(blank=False, null=False, db_column="bed")
-    bath = models.IntegerField(blank=False, null=False, db_column="bath")
+    bed = models.IntegerField(blank=False, null=False, db_column="bed", default=0)
+    bath = models.IntegerField(blank=False, null=False, db_column="bath", default=0)
     squareFeet = models.FloatField(
         verbose_name="Square Feet", blank=False, null=False, db_column="square_feet"
     )
@@ -100,6 +100,7 @@ class Properties(models.Model):
         decimal_places=2,
         blank=False,
         null=False,
+        default=0,
         db_column="projected_rent",
     )
     rentalStatus = models.CharField(

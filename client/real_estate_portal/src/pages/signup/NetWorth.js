@@ -14,7 +14,7 @@ const NetworthForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const initialValues = {
-    networth: '', // Initialize with an empty string
+    networth: '',
   };
 
   const networthOptions = [
@@ -47,7 +47,7 @@ const NetworthForm = () => {
 
       if (response.status === 200) {
         console.log('User profile updated successfully:', response.data);
-        navigate('/documents', { state: { data: response.data } }); // Redirect to the next page
+        navigate('/bank', { state: { data: response.data } }); // Redirect to the next page
       } else {
         console.error('Error updating user profile:', response.status);
       }

@@ -14,6 +14,7 @@ import DocumentsForm from './pages/signup/UploadDocuments';
 
 import Home from './pages/Home';
 import Properties from './components/properties/Properties';
+import PropertyDetail from './components/properties/PropertyDetail';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/bank" element={<BankForm />} />
           <Route path="/documents" element={<DocumentsForm />} />
           <Route path="/properties" element={<Properties />} />
+          <Route path="/property" element={<PropertyDetail />} />
         </Routes>
       </Router>
     </div>

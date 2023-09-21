@@ -1,13 +1,38 @@
-import React from 'react';
-import { Formik, Form } from 'formik';
-import { Button, FormGroup } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import React, { useState } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import { Button, Spinner, FormGroup, FormControl } from 'react-bootstrap';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const BankForm = () => {
-  const handleSubmit = (values, { setSubmitting }) => {
-    // Handle form submission here
-    console.log(values);
-    // You can add your submission logic here
+  const apiHost = process.env.REACT_APP_API_HOST;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { data } = location.state;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (values) => {
+    try {
+      setIsSubmitting(true);
+      const response = await axios.patch(`${apiHost}/api/update-user-profile/${data.user.id}/`, {
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${data.user.token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        navigate('/documents', { state: { data: response.data } }); // Redirect to the next page
+      }
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
