@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 import Navbar from './components/core/Navbar';
 
@@ -17,6 +17,10 @@ import Properties from './components/properties/Properties';
 import PropertyDetail from './components/properties/PropertyDetail';
 
 function App() {
+  const apiHost = process.env.REACT_APP_API_HOST;
+  function redirectToExternalUrl(url) {
+    window.location.href = url;
+  }
   return (
     <div className="App">
       <Router>
@@ -33,6 +37,10 @@ function App() {
           <Route path="/documents" element={<DocumentsForm />} />
           <Route path="/properties" element={<Properties />} />
           <Route path="/property" element={<PropertyDetail />} />
+          <Route
+            path="/admin"
+            element={redirectToExternalUrl(`${apiHost}/admin/`)}
+          />
         </Routes>
       </Router>
     </div>
