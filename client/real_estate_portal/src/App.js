@@ -19,6 +19,7 @@ import PropertyDetail from './components/properties/PropertyDetail';
 function App() {
   const apiHost = process.env.REACT_APP_API_HOST;
   const currentPath = window.location.pathname;
+  console.log(currentPath)
 
   function redirectToExternalUrl(url) {
     window.location.href = url;
@@ -41,7 +42,7 @@ function App() {
           <Route path="/property" element={<PropertyDetail />} />
           <Route
             path="/admin"
-            element={currentPath === '/admin' || '/admin/' ? redirectToExternalUrl(`${apiHost}/admin/`): ''}
+            element={currentPath === '/admin' || currentPath === '/admin/' ? redirectToExternalUrl(`${apiHost}/admin/`): ''}
           />
         </Routes>
       </Router>
