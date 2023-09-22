@@ -42,7 +42,7 @@ function App() {
           <Route path="/property" element={<PropertyDetail />} />
           <Route
             path="/admin"
-            element={currentPath === '/admin' ? redirectToExternalUrl(`${apiHost}/admin/`): ''}
+            element={currentPath === '/admin' || '/admin/' ? redirectToExternalUrl(`${apiHost}/admin/`): ''}
           />
         </Routes>
       </Router>
