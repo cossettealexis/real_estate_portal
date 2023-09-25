@@ -140,6 +140,17 @@ def userprofile_receiver(sender, instance, created, *args, **kwargs):
 
 post_save.connect(userprofile_receiver, sender=User)
 
+
 class Country(models.Model):
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=5)
+
+
+class PlaidToken(models.Model):
+    access_token = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item_id = models.CharField(max_length=100)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.access_token

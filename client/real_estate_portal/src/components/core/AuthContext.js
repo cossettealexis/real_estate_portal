@@ -1,33 +1,25 @@
 import React, { createContext, useContext, useState } from 'react';
 
-const AuthContext = createContext({
-  user: null,
-  login: () => {},
-  logout: () => {},
-});
+const AuthContext = createContext();
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+export const useAuth = () => useContext(AuthContext);
 
-  const login = () => {
-    // Perform authentication logic here
-    setUser({ /* user data */ });
+export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState(null);
+
+  const login = (newToken) => {
+    setToken(newToken);
   };
 
   const logout = () => {
-    // Perform logout logic here
-    setUser(null);
+    setToken(null);
   };
 
   const contextValue = {
-    user,
+    token,
     login,
     logout,
   };
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth() {
-  return useContext(AuthContext);
-}
+};

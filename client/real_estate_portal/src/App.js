@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { AuthProvider } from './components/core/AuthContext';
 
 import Navbar from './components/core/Navbar';
 
@@ -11,6 +12,8 @@ import BirthdateForm from './pages/signup/BirthDate';
 import NetworthForm from './pages/signup/NetWorth';
 import BankForm from './pages/signup/Bank';
 import DocumentsForm from './pages/signup/UploadDocuments';
+
+import Login from './pages/Login';
 
 import Home from './pages/Home';
 import Properties from './components/properties/Properties';
@@ -27,24 +30,27 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/residential-address" element={<ResidentialForm />} />
-          <Route path="/citizenship" element={<CitizenshipForm />} />
-          <Route path="/account-type" element={<AccountTypeForm />} />
-          <Route path="/birth-date" element={<BirthdateForm />} />
-          <Route path="/networth" element={<NetworthForm />} />
-          <Route path="/bank" element={<BankForm />} />
-          <Route path="/documents" element={<DocumentsForm />} />
-          <Route path="/properties" element={<Properties />} />
-          <Route path="/property" element={<PropertyDetail />} />
-          <Route
-            path="/admin"
-            element={currentPath === '/admin' || currentPath === '/admin/' ? redirectToExternalUrl(`${apiHost}/admin/`): ''}
-          />
-        </Routes>
+        <AuthProvider>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/residential-address" element={<ResidentialForm />} />
+            <Route path="/citizenship" element={<CitizenshipForm />} />
+            <Route path="/account-type" element={<AccountTypeForm />} />
+            <Route path="/birth-date" element={<BirthdateForm />} />
+            <Route path="/networth" element={<NetworthForm />} />
+            <Route path="/bank" element={<BankForm />} />
+            <Route path="/documents" element={<DocumentsForm />} />
+            <Route path="/properties" element={<Properties />} />
+            <Route path="/property" element={<PropertyDetail />} />
+            <Route
+              path="/admin"
+              element={currentPath === '/admin' || currentPath === '/admin/' ? redirectToExternalUrl(`${apiHost}/admin/`): ''}
+            />
+          </Routes>
+        </AuthProvider>
       </Router>
     </div>
   );

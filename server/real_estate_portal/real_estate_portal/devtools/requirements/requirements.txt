@@ -8,3 +8,4 @@ django-filter==23.2
 phonenumbers==8.13.19
 django-cors-headers==4.2.0
 environ==1.0
+plaid-python==16.0.0

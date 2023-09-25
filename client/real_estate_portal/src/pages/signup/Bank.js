@@ -12,6 +12,11 @@ const BankForm = () => {
   const navigate = useNavigate();
   const { data } = location.state;
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+
+  const handleBankLinkFailure = () => {
+    setShowNotification(true);
+  };
 
   const handleSubmit = async (values) => {
     try {
@@ -42,6 +47,13 @@ const BankForm = () => {
       marginRight: '25%',
       marginTop: '5%',
     }}>
+
+    {showNotification && (
+      <div className="notification">
+        Link bank is not successful.
+      </div>
+    )}
+
     <div className="mb-4">
         <h3 style={{ fontSize: '2rem', lineHeight: '3.5rem', fontWeight: '700' }}>
             Link your bank
@@ -70,7 +82,18 @@ const BankForm = () => {
                         <small>Instantly link your bank <strong>(immediate verification)</strong></small>
                     </div>
                     <div className='col-2'>
+                      <button
+                        style={{
+                          border: 'none', 
+                          background: 'none',
+                          fontSize: 'inherit',
+                          cursor: 'pointer',
+                        }}
+                       onClick={() => {
+                          handleBankLinkFailure();
+                        }}>
                         <strong>&gt;</strong>
+                      </button>
                     </div>
                   </div>
                 </FormGroup>
@@ -85,7 +108,18 @@ const BankForm = () => {
                         <small>Manually enter bank account info <strong>(1-2 business days to verify)</strong></small>
                     </div>
                     <div className='col-2'>
+                      <button
+                        style={{
+                          border: 'none', 
+                          background: 'none',
+                          fontSize: 'inherit',
+                          cursor: 'pointer',
+                        }}
+                       onClick={() => {
+                          handleBankLinkFailure();
+                        }}>
                         <strong>&gt;</strong>
+                      </button>
                     </div>
                   </div>
                 </FormGroup>
@@ -100,7 +134,18 @@ const BankForm = () => {
                         <small>Upload a picture of a voided check <strong>(105 business days to verify)</strong></small>
                     </div>
                     <div className='col-2'>
+                      <button
+                        style={{
+                          border: 'none', 
+                          background: 'none',
+                          fontSize: 'inherit',
+                          cursor: 'pointer',
+                        }}
+                       onClick={() => {
+                          handleBankLinkFailure();
+                        }}>
                         <strong>&gt;</strong>
+                      </button>
                     </div>
                   </div>
                 </FormGroup>
