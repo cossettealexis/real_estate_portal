@@ -25,17 +25,24 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await axios.post(`${apiHost}/api/login/`, {
         email: formData.email,
         password: formData.password,
       });
-
+  
       setErrorMessage(null);
-
+  
       if (response.status === 200) {
-        login(response.data.token);
+        const token = response.data.token;
+  
+        // Set the token in localStorage
+        localStorage.setItem('authToken', token);
+  
+        // Use the login function from the AuthContext to set the token in state
+        login(token);
+  
         console.log('Authentication successful');
         setLoginSuccess(true); // Set login success to true
         setTimeout(() => {

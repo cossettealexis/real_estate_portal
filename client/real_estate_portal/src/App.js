@@ -29,8 +29,8 @@ function App() {
   }
   return (
     <div className="App">
-      <Router>
-        <AuthProvider>
+      <AuthProvider>
+        <Router>
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -50,8 +50,8 @@ function App() {
               element={currentPath === '/admin' || currentPath === '/admin/' ? redirectToExternalUrl(`${apiHost}/admin/`): ''}
             />
           </Routes>
+        </Router>
         </AuthProvider>
-      </Router>
     </div>
   );
 }

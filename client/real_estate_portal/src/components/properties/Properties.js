@@ -16,7 +16,7 @@ function Properties() {
 
   const fetchProperties = async () => {
     try {
-      const response = await axios.get(apiHost + '/api/properties/');
+      const response = await axios.get(`${apiHost}/api/properties/`);
       if (response.status !== 200) {
         throw new Error('Network response was not ok');
       }
@@ -28,11 +28,13 @@ function Properties() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(apiHost + '/api/categories/');
+      const response = await axios.get(`${apiHost}/api/categories/`);
       if (response.status !== 200) {
-        throw new Error('Network response was not ok');
+        throw Error('Network response was not ok');
       }
-      setCategories(response.data.results);
+      // Extract category names from the response objects
+      const categoryNames = response.data.results.map((category) => category.category_name);
+      setCategories(categoryNames);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
@@ -43,17 +45,12 @@ function Properties() {
   };
 
   const showPropertyDetail = (property) => {
-    console.log('jjj')
-    console.log(property)
     setSelectedProperty(property);
   };
 
   return (
-    <section className="" style={{
-      margin: '5%'
-    }}
-    >
-      {selectedProperty ? ( // Render PropertyDetail if selectedProperty is not null
+    <section className="" style={{ margin: '5%' }}>
+      {selectedProperty ? (
         <PropertyDetail object={selectedProperty} />
       ) : (
         <div>
@@ -78,6 +75,16 @@ function Properties() {
                     >
                       All
                     </li>
+                    {categories.map((category, index) => (
+                      <li
+                        key={index}
+                        className={`nav-item properties-nav-item ${activeCategory === category ? 'filter-active' : ''}`}
+                        onClick={() => filterProperties(category)}
+                        style={{ marginLeft: '20px' }}
+                      >
+                        {category}
+                      </li>
+                    ))}
                   </ul>
                   <ul className="navbar-nav nav-flex-icons">
                     <li className="nav-item">
@@ -91,33 +98,37 @@ function Properties() {
             </nav>
             <div className="container-fluid mt-5">
               <div className="row properties-container">
-                {properties.map((property, index) => (
-                  <div className="col-lg-3 col-md-4 mb-4 property-item" key={index}>
-                    <a className="card-link text-decoration-none" href="#">
-                      <div
-                        className="card border-0 bg-light h-100"
-                        onClick={() => showPropertyDetail(property)}
-                      >
-                        <img src={apiHost + property.property_image} className="card-img-top" height="250" alt="" />
-                        <div className="card-body">
-                          <h5 className="text-decoration-none pointer-events-none">{property.name}</h5>
-                          <p>{property.address1}</p>
-                          <p>{property.type.category_name}</p>
-                          <div className="row mt-3">
-                            <div className="col-sm-6">
-                              <small>87% Funded | 1,921 Investors</small>
-                            </div>
-                            <div className="col-sm-6 d-flex justify-content-end">
-                              <button href="#" type="button" className="btn btn-dark btn-sm">
-                                Invest now
-                              </button>
+                {properties
+                  .filter((property) =>
+                    activeCategory === '*' ? true : property.type.category_name === activeCategory
+                  )
+                  .map((property, index) => (
+                    <div className="col-lg-3 col-md-4 mb-4 property-item" key={index}>
+                      <a className="card-link text-decoration-none" href="#">
+                        <div
+                          className="card border-0 bg-light h-100"
+                          onClick={() => showPropertyDetail(property)}
+                        >
+                          <img src={apiHost + property.property_image} className="card-img-top" height="250" alt="" />
+                          <div className="card-body">
+                            <h5 className="text-decoration-none pointer-events-none">{property.name}</h5>
+                            <p>{property.address1}</p>
+                            <p>{property.type.category_name}</p>
+                            <div className="row mt-3">
+                              <div className="col-sm-6">
+                                <small>87% Funded | 1,921 Investors</small>
+                              </div>
+                              <div className="col-sm-6 d-flex justify-content-end">
+                                <button href="#" type="button" className="btn btn-dark btn-sm">
+                                  Invest now
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </a>
-                  </div>
-                ))}
+                      </a>
+                    </div>
+                  ))}
               </div>
             </div>
           </main>

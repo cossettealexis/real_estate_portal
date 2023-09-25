@@ -14,9 +14,11 @@ function NavBar() {
   const apiHost = process.env.REACT_APP_API_HOST;
   const { token, logout } = useAuth();
 
+  console.log('Token:', token); // Add this line to check the token
+
   const handleLogout = async () => {
     try {
-      console.log(token);
+      console.log('Token before logout:', token); // Add this line to check the token before logout
 
       const response = await axios.post(
         `${apiHost}/api/logout/`,
