@@ -92,7 +92,7 @@ function NavBar() {
                   <Button variant="dark">Sign Up</Button>
                 </Nav.Link>
               </>
-            )}
+            )} 
           </Nav>
         </Navbar.Collapse>
       </Container>
