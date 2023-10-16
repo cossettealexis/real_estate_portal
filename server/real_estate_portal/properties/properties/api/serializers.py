@@ -1,7 +1,7 @@
 import random
 from rest_framework import serializers
 from rest_framework.reverse import reverse
-from properties.models import Properties
+from properties.models import Amenity, Properties
 from properties.category.api.serializers import CategorySerializer
 from properties.pictures.api.serializers import PictureListSerializer
 
@@ -13,6 +13,7 @@ class PropertyListSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=100, required=True, allow_null=False, allow_blank=False)
     address1 = serializers.CharField(max_length=100, required=True, allow_null=False, allow_blank=False)
     address2 = serializers.CharField(max_length=100, required=False, allow_null=True, allow_blank=True)
+    amenities = serializers.SerializerMethodField()
     bath = serializers.IntegerField(required=False),
     bed = serializers.IntegerField(required=True),
     buildYear = serializers.IntegerField(required=True),
@@ -39,6 +40,7 @@ class PropertyListSerializer(serializers.ModelSerializer):
             'id',
             'address1',
             'address2',
+            'amenities',
             'bath',
             'bed',
             'buildYear',
@@ -64,6 +66,11 @@ class PropertyListSerializer(serializers.ModelSerializer):
             return image.picture.url
         else:
             return None
+        
+
+    def get_amenities(self, obj):
+        amenities = Amenity.objects.filter(property=obj.pk).values_list('amenity')
+        return amenities
     
     # def get_property_images(self, obj):
     #         # Get all images associated with the property
