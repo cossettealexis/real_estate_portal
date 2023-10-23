@@ -1,3 +1,30 @@
 .underline {
     border-bottom: 1px dashed black;
 }
+
+.custom-table {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    border-radius: 10px;
+  }
+  
+.column-1,
+.column-2,
+.column-3 {
+    width: 25%;
+  }
+
+.td-underline {
+    border-bottom: 1px dashed#464444;
+  }
+
+.custom-table tr,
+.custom-table td {
+  border-bottom: none;
+}
+
+
+.finance-details tr {
+  border-bottom: 1px solid #ddd
+}

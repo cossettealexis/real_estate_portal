@@ -148,9 +148,7 @@ def update_user_profile(request, user_id):
         return Response({'error': 'Permission denied.'}, status=status.HTTP_403_FORBIDDEN)
     
     serializer = UserInvestorProfileSerializer(user_profile, data=request.data, partial=True)
-    print(request.data)
     if serializer.is_valid():
-        print('valid')
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
     

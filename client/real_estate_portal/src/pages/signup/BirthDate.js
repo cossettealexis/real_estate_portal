@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik'; // Import ErrorMessage
+import React, { useEffect, useRef } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Button, Spinner } from 'react-bootstrap';
 import axios from 'axios';
@@ -14,20 +14,32 @@ const BirthdateForm = () => {
   const { data } = location.state;
   const userId = data.user.id;
 
-  // Initialize form values state with data from the API response
-  const [formValues, setFormValues] = useState({
+  const initialValues = {
     birthdate: data.birthdate || '',
     ssn: data.ssn || '',
-  });
+  };
 
   const validationSchema = Yup.object().shape({
     birthdate: Yup.date().required('Date of birth is required'),
     ssn: Yup.string()
-      .matches(/^\d{9}$/, 'Social Security Number must be 9 digits')
+      .matches(/^\d{3}-\d{2}-\d{4}$/, 'Enter a valid SSN (e.g., 111-11-1111)')
       .required('Social Security Number is required'),
   });
 
+  const formatSSN = (value) => {
+    // Remove non-digit characters
+    const ssnDigits = value.replace(/\D/g, '');
+    
+    // Format SSN as XXX-XX-XXXX
+    const formattedSSN = ssnDigits.replace(/(\d{3})(\d{2})(\d{4})/, '$1-$2-$3');
+    
+    return formattedSSN;
+  };
+
   const handleSubmit = async (values, { setSubmitting }) => {
+    // Remove non-digit characters to save in the database
+    values.ssn = values.ssn.replace(/\D/g, '');
+    
     try {
       const userToken = data.user.token;
       const response = await axios.patch(
@@ -58,6 +70,8 @@ const BirthdateForm = () => {
     }
   };
 
+  const maxDate = new Date().toISOString().split('T')[0]; // Get the current date
+
   return (
     <section
       className="birthdate"
@@ -81,11 +95,11 @@ const BirthdateForm = () => {
       </div>
 
       <Formik
-        initialValues={formValues}
+        initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, setFieldValue }) => (
           <Form className="needs-validation" noValidate>
             <div className="form-row">
               <div className="col-md-12 mb-3">
@@ -94,8 +108,8 @@ const BirthdateForm = () => {
                     type="date"
                     name="birthdate"
                     className="form-control"
-                    placeholder="Birthdate"
                     required
+                    max={maxDate} // Set max attribute to the current date
                   />
                   <ErrorMessage
                     name="birthdate"
@@ -110,8 +124,12 @@ const BirthdateForm = () => {
                     type="text"
                     name="ssn"
                     className="form-control"
-                    placeholder="Social Security Number"
+                    placeholder="Social Security Number (e.g., 111-11-1111)"
                     required
+                    onChange={(e) => {
+                      const formattedSSN = formatSSN(e.target.value);
+                      setFieldValue('ssn', formattedSSN);
+                    }}
                   />
                   <ErrorMessage
                     name="ssn"

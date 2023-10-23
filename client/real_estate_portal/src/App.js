@@ -6,6 +6,7 @@ import Navbar from './components/core/Navbar';
 
 import Register from './pages/signup/Register';
 import ResidentialForm from './pages/signup/ResidentialAddress';
+import MailingAddressForm from './pages/signup/MailingAddress';
 import CitizenshipForm from './pages/signup/Citizenship';
 import AccountTypeForm from './pages/signup/AccountType';
 import BirthdateForm from './pages/signup/BirthDate';
@@ -37,6 +38,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/residential-address" element={<ResidentialForm />} />
+            <Route path="/mailing-address" element={<MailingAddressForm />} />
             <Route path="/citizenship" element={<CitizenshipForm />} />
             <Route path="/account-type" element={<AccountTypeForm />} />
             <Route path="/birth-date" element={<BirthdateForm />} />
