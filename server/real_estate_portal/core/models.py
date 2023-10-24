@@ -167,3 +167,8 @@ class PlaidToken(models.Model):
 
     def __str__(self):
         return self.access_token
+    
+
+class BankAccount(models.Model):
+    account_id = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)

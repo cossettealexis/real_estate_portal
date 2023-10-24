@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Button, Spinner, FormGroup, FormControl } from 'react-bootstrap';
@@ -6,16 +6,62 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
+
+
 const BankForm = () => {
   const apiHost = process.env.REACT_APP_API_HOST;
+  const Plaid = require('plaid');
   const location = useLocation();
   const navigate = useNavigate();
   const { data } = location.state;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
+  const [linkToken, setLinkToken] = useState('');
+  const [apiError, setApiError] = useState(null);
+
 
   const handleBankLinkFailure = () => {
     setShowNotification(true);
+  };
+
+  useEffect(() => {
+    // Fetch the Plaid Link token from your Django API
+    axios.get(`${apiHost}/api/get_plaid_link_token/`) // Update the API endpoint as needed
+      .then(response => {
+        setLinkToken(response.data.link_token);
+      })
+      .catch(error => {
+        setApiError('Error connecting to Plaid.');
+      });
+  }, []);
+
+  const plaidLinkOptions = {
+    token: linkToken, // Your Plaid Link token obtained from the server
+    onSuccess: (publicToken, metadata) => {
+      handlePlaidLinkSuccess(publicToken, metadata);
+    },
+  };
+
+  const handlePlaidLinkSuccess = (publicToken, metadata) => {
+    // Handle Plaid Link success
+    console.log('Plaid Link success - publicToken:', publicToken);
+    console.log('Plaid Link success - metadata:', metadata);
+
+    // Optionally, you can send the publicToken to your server for further processing
+    // Example:
+    // axios.post('/api/process_plaid_link/', { publicToken })
+    //   .then(response => {
+    //     // Handle the response from the server
+    //   })
+    //   .catch(error => {
+    //     // Handle errors
+    //   });
+  };
+
+  const handlePlaidLinkClick = () => {
+    // Launch Plaid Link when the "Link bank with Plaid with credentials" option is clicked
+    const linkHandler = Plaid.create(plaidLinkOptions);
+    linkHandler.open();
   };
 
   const handleSubmit = async (values) => {
@@ -64,6 +110,26 @@ const BankForm = () => {
         </p>
       </div>
 
+      {apiError && (
+        <div className="error-message" style={
+          {
+            // backgroundColor: '#f44336',
+            color: 'red',
+            textAlign: 'center',
+            padding: '8px',
+            marginTop: '10px',
+            borderRadius: '5px'
+          }
+        }>
+          {apiError}
+        </div>
+      )}
+      {showNotification && (
+        <div className="notification">
+          Link bank is not successful.
+        </div>
+      )}
+
       <Formik
         initialValues={{ bankOption: '' }}
         onSubmit={handleSubmit}
@@ -90,7 +156,7 @@ const BankForm = () => {
                           cursor: 'pointer',
                         }}
                        onClick={() => {
-                          handleBankLinkFailure();
+                        handlePlaidLinkClick()
                         }}>
                         <strong>&gt;</strong>
                       </button>
