@@ -115,12 +115,6 @@ class UserInvestorProfile(models.Model):
         null=True,
     )
 
-    verification_document = models.FileField(
-        upload_to='verification_documents/',
-        blank=True,
-        null=True,
-    )
-
 
     class Meta(object):
         db_table = "user_investor_profile"
@@ -135,6 +129,21 @@ class UserInvestorProfile(models.Model):
             self.user.save()
 
         super().save(*args, **kwargs)
+
+
+class Document(models.Model):
+    user = models.ForeignKey(
+        UserInvestorProfile,
+        verbose_name="User",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        db_column="user_id",
+    )
+    file = models.FileField(upload_to='verification_documents/')
+
+    class Meta(object):
+        db_table = "document"
 
 
 def userprofile_receiver(sender, instance, created, *args, **kwargs):

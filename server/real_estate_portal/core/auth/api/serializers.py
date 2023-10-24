@@ -1,4 +1,4 @@
-from core.models import User, Country, UserInvestorProfile
+from core.models import Document, User, Country, UserInvestorProfile
 from rest_framework.authtoken.models import Token
 
 from rest_framework import serializers
@@ -6,6 +6,8 @@ from rest_framework.validators import UniqueValidator
 
 from django_countries.serializers import CountryFieldMixin
 from django.contrib.auth.password_validation import validate_password
+
+from core.document.api.serializers import DocumentSerializer
 
 
 class UserSerializer(CountryFieldMixin, serializers.ModelSerializer):
@@ -60,10 +62,12 @@ class UserSerializer(CountryFieldMixin, serializers.ModelSerializer):
         user.save()
 
         return user
-    
+
 
 class UserInvestorProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
+    files = serializers.SerializerMethodField()
+
     class Meta:
         model = UserInvestorProfile
         read_only_fields = (
@@ -86,8 +90,12 @@ class UserInvestorProfileSerializer(serializers.ModelSerializer):
             'birthdate',
             'ssn',
             'networth',
-            'verification_document',
+            'files',
         )
+
+    def get_files(self, obj):
+        documents = Document.objects.filter(user=obj)
+        return documents
 
 
 class CountrySerializer(serializers.ModelSerializer):
