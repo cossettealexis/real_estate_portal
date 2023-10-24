@@ -19,11 +19,11 @@ const DocumentsForm = () => {
   const handleFileSubmit = async (values, { setSubmitting }) => {
     try {
       setSubmitError(null);
-
+  
       const formData = new FormData();
       formData.append('file', values.file);
       formData.append('user', data.user.id);
-
+  
       const documentResponse = await axios.post(`${apiHost}/api/documents/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -52,7 +52,7 @@ const DocumentsForm = () => {
   const fetchUserDocuments = async (userId) => {
     try {
 
-    const response = await axios.get(`${apiHost}/api/documents/?user=${userId}/`, {
+    const response = await axios.get(`${apiHost}/api/documents/?user_id=${userId}`, {
       headers: {
         Authorization: `Token ${data.user.token}`,
       },

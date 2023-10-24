@@ -6,7 +6,7 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ('id', 'first_name', 'last_name', 'email')
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user',)
+    list_display = ('id', 'user',)
 
 class DocumentsAdmin(admin.ModelAdmin):
     list_display = ('id', 'file', 'user')
