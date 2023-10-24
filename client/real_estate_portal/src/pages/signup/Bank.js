@@ -65,25 +65,29 @@ const BankForm = () => {
   };
 
   const handleSubmit = async (values) => {
-    try {
-      setIsSubmitting(true);
-      const response = await axios.patch(`${apiHost}/api/update-user-profile/${data.user.id}/`, {
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Token ${data.user.token}`,
-        },
-      });
+    setIsSubmitting(true);
+    handlePlaidLinkClick();
+    //   handlePlaidLinkClick()
+    // try {
+    //   setIsSubmitting(true);
+    //   handlePlaidLinkClick()
+    //   const response = await axios.patch(`${apiHost}/api/update-user-profile/${data.user.id}/`, {
+    //   },
+    //   {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       Authorization: `Token ${data.user.token}`,
+    //     },
+    //   });
 
-      if (response.status === 200) {
-        navigate('/documents', { state: { data: response.data } }); // Redirect to the next page
-      }
-    } catch (error) {
-      console.error('Error updating user profile:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    //   if (response.status === 200) {
+    //     navigate('/documents', { state: { data: response.data } }); // Redirect to the next page
+    //   }
+    // } catch (error) {
+    //   console.error('Error updating user profile:', error);
+    // } finally {
+    //   setIsSubmitting(false);
+    // }
   };
 
   return (
@@ -218,7 +222,7 @@ const BankForm = () => {
               </div>
             </div>
             <div className="col-md-6 d-flex align-items-end mt-5 mx-auto">
-              <button type="submit" className="btn w-100">
+            <button className="btn w-100" onClick={() => navigate('/documents', { state: { data: data } })}>
                 <strong>I'll do this later &gt;</strong>
               </button>
             </div>

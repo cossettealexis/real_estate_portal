@@ -95,7 +95,7 @@ class UserInvestorProfileSerializer(serializers.ModelSerializer):
 
     def get_files(self, obj):
         documents = Document.objects.filter(user=obj)
-        return documents
+        return DocumentSerializer(documents, many=True).data
 
 
 class CountrySerializer(serializers.ModelSerializer):
