@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-^h+zt+)cnon*%^ftu-x(i315-l76nrg7h#&0&0j=kcfc!xj0js
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS=["54.234.32.242", "127.0.0.1", "localhost", "0.0.0.0"]
+ALLOWED_HOSTS=["localhost", "54.234.32.242", "127.0.0.1", "localhost", "0.0.0.0", "localhost:8000"]
 
 
 # Application definition
@@ -159,7 +159,10 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
 
-CORS_ORIGIN_WHITELIST = ('http://localhost:3000',)
+CORS_ORIGIN_WHITELIST = ('http://localhost:8000', 'http://127.0.0.1:8000', '127.0.0.1:8000',)
+CORS_ORIGIN_ALLOWED_ORIGINS = ('http://localhost:8000', 'http://127.0.0.1:8000', '127.0.0.1:8000',)
+CORS_ALLOW_ALL_ORIGINS = True
+
 APPEND_SLASH=False
 
 PLAID_CLIENT_ID = env('PLAID_CLIENT_ID')

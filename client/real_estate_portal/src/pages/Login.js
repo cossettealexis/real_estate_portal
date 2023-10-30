@@ -95,7 +95,7 @@ const Login = () => {
             <p className="text-success">Login successful. Redirecting...</p>
           )}
         </form>
-        <p>Don't have an account? <a href="/signup">Sign up</a></p>
+        <p>Don't have an account? <a href="/register">Sign up</a></p>
       </div>
     </div>
   );

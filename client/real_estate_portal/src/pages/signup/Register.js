@@ -4,12 +4,14 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Register.css';
+import { useAuth } from '../../components/core/AuthContext';
 
 function Signup() {
   const navigate = useNavigate();
   const apiHost = process.env.REACT_APP_API_HOST;
   const [apiError, setApiError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
 
   const validationSchema = Yup.object({
     first_name: Yup.string().required('First Name is required'),
@@ -48,6 +50,9 @@ function Signup() {
           setApiError(null);
           setIsLoading(false); // Turn off loading state
           const data = response.data;
+
+          const token = response.data.token;
+          login(token);
 
           // Redirect to the residential form page upon successful registration
           navigate('/residential-address', { state: { data: response.data } });

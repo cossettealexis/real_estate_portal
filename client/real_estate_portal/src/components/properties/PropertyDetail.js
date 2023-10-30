@@ -79,7 +79,7 @@ const PropertyDetail = ({ object, investors, amenity }) => {
             <Carousel activeIndex={index} onSelect={handleSelect}>
                 {object.image.map((image, idx) => (
                   <Carousel.Item key={idx}>
-                    <img src={image.picture} className="d-block w-100" alt={`Slide ${idx + 1}`} style={{ height: '500px' }} />
+                    <img src={image.picture} className="d-block w-100" alt={`Slide ${idx + 1}`} style={{ height: '680px' }} />
                   </Carousel.Item>
                 ))}
             </Carousel>
@@ -90,9 +90,11 @@ const PropertyDetail = ({ object, investors, amenity }) => {
                   <img
                     key={idx}
                     src={image.picture}
-                    className={`d-block w-100 mb-3 ${highlightedIndex === idx ? 'border border-primary' : ''}`}
+                    className='d-block w-100 mb-3'
+                    // className={`d-block w-100 mb-3 ${highlightedIndex === idx ? '10px border solid black' : ''}`}
                     alt={`Slide ${idx + 1}`}
-                    style={{ height: '155px' }}
+                    style={{ border: highlightedIndex === idx ? '2px solid black' : 'none', height: '155px' }}
+
                   />
                 ))}
               </div>
@@ -113,7 +115,7 @@ const PropertyDetail = ({ object, investors, amenity }) => {
               <div className="col-md-3">
                 <span className="underline text-secondary">Investors</span>
                 <br/>
-                <strong>{investors || 0}</strong>
+                <strong>{ object.investors || 0}</strong>
               </div>
               <div className='col-md-3'>
                 <span className="underline text-secondary">Property Leverage</span>
@@ -166,7 +168,7 @@ const PropertyDetail = ({ object, investors, amenity }) => {
               <div className='col-md-6'>
                 <span className="underline text-secondary">Rental Status</span>
                 <br/>
-                <strong>Approved application</strong>
+                <strong>{object.rentalStatus}</strong>
               </div>
               <div className='col-md-6'>
                 <span className="underline text-secondary">Anticipated First Dividend Date</span>
@@ -455,7 +457,7 @@ const PropertyDetail = ({ object, investors, amenity }) => {
                 <tbody>
                   <tr className='finance-details'>
                     <td>Property Purchase Price</td>
-                    <td>$300,000</td>
+                    <td>${object.purchasePrice || 0}</td>
                   </tr>
                   <tr className='finance-details'>
                     <td>Property Improvements & Cash Reserves</td>
@@ -514,7 +516,7 @@ const PropertyDetail = ({ object, investors, amenity }) => {
                   </tr>
                   <tr className='finance-details'>
                     <td>Hold Period</td>
-                    <td>5 - 7 years</td>
+                    <td>{ object.buildYear} years</td>
                   </tr>
                   <tr className='finance-details'>
                     <td>Arrived Asset Management Fee</td>
@@ -536,7 +538,7 @@ const PropertyDetail = ({ object, investors, amenity }) => {
             <ListGroup variant="flush">
               <ListGroup.Item className='p-3'>
                 <strong className='text-secondary' style={{}}>
-                  <strong style={{ fontSize: '1.5rem', fontWeight: 900 }}>$361,540</strong>
+                  <strong style={{ fontSize: '1.5rem', fontWeight: 900 }}>${object.numberOfStocks}</strong>
                   <small> INVESTED</small>
                   </strong>
                   <Button className='my-3 p-2' variant="secondary" style={{ width: '100%', height: '100%' }}>
@@ -548,7 +550,7 @@ const PropertyDetail = ({ object, investors, amenity }) => {
               <ListGroup.Item className='p-3'>
                 <div className='row'>
                   <div className='col-sm-6'>
-                    <h6>962 INVESTORS</h6>
+                    <h6>{object.investors} INVESTORS</h6>
                   </div>
                   <div className='col-sm-6'>
                     <h6>100% FUNDED</h6>

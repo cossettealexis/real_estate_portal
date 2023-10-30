@@ -116,7 +116,7 @@ function Properties() {
                             <p>{property.type.category_name}</p>
                             <div className="row mt-3">
                               <div className="col-sm-6">
-                                <small>87% Funded | 1,921 Investors</small>
+                                <small>87% Funded | { property.investors } Investors</small>
                               </div>
                               <div className="col-sm-6 d-flex justify-content-end">
                                 <button href="#" type="button" className="btn btn-dark btn-sm">

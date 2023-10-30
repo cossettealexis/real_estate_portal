@@ -1,7 +1,7 @@
-import random
+from django.db import models
 from rest_framework import serializers
 from rest_framework.reverse import reverse
-from properties.models import Amenity, Properties
+from properties.models import Amenity, Properties, PropertyInvestor
 from properties.category.api.serializers import CategorySerializer
 from properties.pictures.api.serializers import PictureListSerializer
 
@@ -20,7 +20,9 @@ class PropertyListSerializer(serializers.ModelSerializer):
     city = serializers.CharField(max_length=100, required=True, allow_null=False, allow_blank=True)
     country = serializers.CharField(max_length=100, required=True, allow_null=False, allow_blank=True)
     image = PictureListSerializer(required=True, many=True)
+    investors = serializers.SerializerMethodField()
     longDescription = serializers.CharField(source='longDesc', required=True, allow_null=False, allow_blank=False)
+    numberOfStocks = serializers.SerializerMethodField()
     rentalStatus = serializers.CharField(max_length=50, required=False, allow_null=True, allow_blank=True)
     property_image = serializers.SerializerMethodField(read_only=True)
     # property_images = serializers.SerializerMethodField(read_only=True)
@@ -47,8 +49,10 @@ class PropertyListSerializer(serializers.ModelSerializer):
             'city',
             'country',
             'image',
+            'investors',
             'longDescription',
             'name',
+            'numberOfStocks',
             'property_image',
             # 'property_images',
             'purchasePrice',
@@ -71,6 +75,15 @@ class PropertyListSerializer(serializers.ModelSerializer):
     def get_amenities(self, obj):
         amenities = Amenity.objects.filter(property=obj.pk).values_list('amenity')
         return amenities
+    
+    def get_investors(self, obj):
+        investors = PropertyInvestor.objects.filter(propertyId=obj.pk)
+        return investors.count()
+    
+    def get_numberOfStocks(self, obj):
+        total_number_of_stocks = PropertyInvestor.objects.filter(propertyId=obj).aggregate(total_stocks=models.Sum('numberOfStocks'))['total_stocks']
+        return total_number_of_stocks
+
     
     # def get_property_images(self, obj):
     #         # Get all images associated with the property
